@@ -16,7 +16,6 @@ function App() {
   function handleSubmit(e) {
     e.preventDefault();
     setErrorMessage(undefined);
-    setSuccesMessage(undefined);
     setIsLoading(true);
     const objectToSubmit = {
       name,
@@ -31,10 +30,16 @@ function App() {
     promise.then((res) => {
       setSuccesMessage("Produto inserido!");
       setIsLoading(false);
+      setTimeout(() => {
+        setSuccesMessage(undefined);
+      }, 1000);
     });
     promise.catch((err) => {
       setErrorMessage(err.response.data);
       setIsLoading(false);
+      setTimeout(() => {
+        setErrorMessage(undefined);
+      }, 1000);
     });
   }
   return (
@@ -83,11 +88,9 @@ function App() {
           />
           <button type="submit">CRIAR PRODUTO</button>
         </form>
-        {
-          isLoading && (
-            <h2 style={{ backgroundColor: "#ffffff" }}>Loading...</h2>
-          )
-        }
+        {isLoading && (
+          <h2 style={{ backgroundColor: "#ffffff" }}>Loading...</h2>
+        )}
         {errorMessage && (
           <h2 style={{ backgroundColor: "#ffb3b2" }}>{errorMessage}</h2>
         )}
