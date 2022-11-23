@@ -11,34 +11,39 @@ function App() {
   const [image, setImage] = useState(undefined);
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [successMessage, setSuccesMessage] = useState(undefined);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
+    setErrorMessage(undefined);
+    setSuccesMessage(undefined);
+    setIsLoading(true);
     const objectToSubmit = {
       name,
       category,
       value: Number(value),
       description,
       amount: Number(amount),
-      image
+      image,
     };
-    console.log(objectToSubmit)
     const URL = "https://lacopa-api.onrender.com/createproduct";
     const promise = axios.post(URL, objectToSubmit);
     promise.then((res) => {
       setSuccesMessage("Produto inserido!");
-      console.log("OK");
+      setIsLoading(false);
     });
     promise.catch((err) => {
       setErrorMessage(err.response.data);
-      console.log(err.response);
+      setIsLoading(false);
     });
   }
   return (
     <>
       <GlobalStyle />
       <div>
-        <h1>LaCopa <span>Product Creator</span></h1>
+        <h1>
+          LaCopa <span>Product Creator</span>
+        </h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -78,8 +83,17 @@ function App() {
           />
           <button type="submit">CRIAR PRODUTO</button>
         </form>
-        {errorMessage && <h2 style={{backgroundColor: "#ffb3b2"}}>{errorMessage}</h2>}
-        {successMessage && <h2 style={{backgroundColor: "#abf7b1"}}>{successMessage}</h2>}
+        {
+          isLoading && (
+            <h2 style={{ backgroundColor: "#ffffff" }}>Loading...</h2>
+          )
+        }
+        {errorMessage && (
+          <h2 style={{ backgroundColor: "#ffb3b2" }}>{errorMessage}</h2>
+        )}
+        {successMessage && (
+          <h2 style={{ backgroundColor: "#abf7b1" }}>{successMessage}</h2>
+        )}
       </div>
     </>
   );
